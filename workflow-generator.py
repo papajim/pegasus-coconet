@@ -69,7 +69,9 @@ class CoconetWorkflow():
         motion_container = Container("motion_container", Container.DOCKER, image=os.path.join(self.wf_dir, "containers/motion_container.tar"), image_site="condorpool")
         detection_container = Container("detection_container", Container.DOCKER, image=os.path.join(self.wf_dir, "containers/detection_container.tar"), image_site="condorpool")
 
-        motion_module = Transformation("motion_module", site=exec_site_name, pfn=os.path.join(self.wf_dir, "bin/motion_module_wrapper.sh"), is_stageable=True, container=motion_container)
+        motion_module = Transformation("motion_module", site=exec_site_name, pfn=os.path.join(self.wf_dir, "bin/motion_module_wrapper.sh"), is_stageable=True, container=motion_container)\
+                            .add_condor_profile(request_gpus="1")
+                                
         detection_module = Transformation("detection_module", site=exec_site_name, pfn=os.path.join(self.wf_dir, "bin/detection_module_wrapper.sh"), is_stageable=True, container=detection_container)
         tracking_fusion_module = Transformation("tracking_fusion_module", site=exec_site_name, pfn=os.path.join(self.wf_dir, "bin/tracking_fusion_module_wrapper.sh"), is_stageable=False)
 
